@@ -15,7 +15,7 @@ class ClickerGame {
 
     click() {
         this.score += this.clickValue;
-        this.updateUI();
+        this.updateScore(this.score); 
     }
 
     buyUpgrade(upgrade) {
@@ -25,20 +25,17 @@ class ClickerGame {
             this.clickValue += upgrade.clickBonus;
             this.autoClickValue += upgrade.autoClickBonus;
 
-            
             const newCost = Math.floor(upgrade.baseCost * Math.pow(this.costMultiplier, upgrade.level));
             console.log(`Upgrade: ${upgrade.name}, new calculated cost: ${newCost}, previous cost: ${upgrade.cost}`);
 
-           
             upgrade.cost = newCost;
 
-            
             if (isNaN(upgrade.cost) || upgrade.cost === undefined) {
                 console.error(`Error: Upgrade cost became invalid (NaN/undefined) for ${upgrade.name}`);
-                upgrade.cost = upgrade.baseCost; 
+                upgrade.cost = upgrade.baseCost;
             }
 
-            this.updateUI();
+            this.updateScore(this.score);  
             this.displayUpgrades();
             this.startAutoClick();
         } else {
@@ -50,13 +47,22 @@ class ClickerGame {
         if (this.autoClickValue > 0 && !this.interval) {
             this.interval = setInterval(() => {
                 this.score += this.autoClickValue;
-                this.updateUI();
+                this.updateScore(this.score);  
             }, 1000);
         }
     }
 
-    updateUI() {
-        document.getElementById("score").innerText = `Очки: ${this.score}`;
+    updateScore(newScore) {
+        const scoreElement = document.getElementById('score');
+        scoreElement.textContent = `Очки: ${newScore}`;
+        
+        
+        scoreElement.classList.add('updated');
+        
+        
+        setTimeout(() => {
+            scoreElement.classList.remove('updated');
+        }, 300);
     }
 
     saveGame() {
@@ -102,8 +108,28 @@ class ClickerGame {
 
 const game = new ClickerGame();
 
-
 document.getElementById("clickButton").addEventListener("click", () => game.click());
 document.getElementById("saveButton").addEventListener("click", () => game.saveGame());
 document.getElementById("loadButton").addEventListener("click", () => game.loadGame());
+document.querySelector('.game').classList.add('visible');
+function addPoints(points) {
+    const scoreElement = document.getElementById('score');
+    scoreElement.innerText = parseInt(scoreElement.innerText) + points;
+
+    
+    const pointElement = document.createElement('span');
+    pointElement.innerText = `+${points}`;
+    pointElement.className = 'point'; 
+
+   
+    scoreElement.appendChild(pointElement);
+
+   
+    setTimeout(() => {
+        pointElement.remove();
+    }, 500); 
+}
+
+
+
 
