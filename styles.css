@@ -1,4 +1,3 @@
-
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -17,6 +16,14 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     color: #f8f8f2; 
+    opacity: 0; 
+    transform: translateY(20px); 
+    transition: opacity 0.5s ease, transform 0.5s ease; 
+}
+
+.game.visible {
+    opacity: 1; 
+    transform: translateY(0); 
 }
 
 #score {
@@ -33,11 +40,12 @@ body {
     color: white;
     border-radius: 5px;
     margin: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 
 #clickButton:hover, #saveButton:hover, #loadButton:hover {
     background-color: #50fa7b; 
+    transform: scale(1.05); 
 }
 
 #upgrades button {
@@ -50,11 +58,12 @@ body {
     color: white;
     border: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 
 #upgrades button:hover {
     background-color: #ff79c6; 
+    transform: scale(1.05); 
 }
 
 @keyframes bounce {
@@ -62,3 +71,4 @@ body {
     50% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
+
