@@ -11,11 +11,13 @@ class ClickerGame {
         this.interval = null;
         this.loadGame();
         this.displayUpgrades();
+        
+        
+        document.querySelector('.game').classList.add('visible');
     }
 
     click() {
-        this.score += this.clickValue;
-        this.updateScore(this.score); 
+        this.updateScore(this.clickValue); 
     }
 
     buyUpgrade(upgrade) {
@@ -35,7 +37,6 @@ class ClickerGame {
                 upgrade.cost = upgrade.baseCost;
             }
 
-            this.updateScore(this.score);  
             this.displayUpgrades();
             this.startAutoClick();
         } else {
@@ -46,24 +47,24 @@ class ClickerGame {
     startAutoClick() {
         if (this.autoClickValue > 0 && !this.interval) {
             this.interval = setInterval(() => {
-                this.score += this.autoClickValue;
-                this.updateScore(this.score);  
+                this.updateScore(this.autoClickValue);  
             }, 1000);
         }
     }
 
-    updateScore(newScore) {
+    updateScore(points) {
+        this.score += points; 
         const scoreElement = document.getElementById('score');
-        scoreElement.textContent = `Очки: ${newScore}`;
+        scoreElement.textContent = `Очки: ${this.score}`;
         
-        
-        scoreElement.classList.add('updated');
+        scoreElement.classList.add('score-bounce', 'score-green'); 
         
         
         setTimeout(() => {
-            scoreElement.classList.remove('updated');
-        }, 300);
+            scoreElement.classList.remove('score-bounce', 'score-green');
+        }, 600); 
     }
+    
 
     saveGame() {
         const saveData = {
@@ -111,25 +112,3 @@ const game = new ClickerGame();
 document.getElementById("clickButton").addEventListener("click", () => game.click());
 document.getElementById("saveButton").addEventListener("click", () => game.saveGame());
 document.getElementById("loadButton").addEventListener("click", () => game.loadGame());
-document.querySelector('.game').classList.add('visible');
-function addPoints(points) {
-    const scoreElement = document.getElementById('score');
-    scoreElement.innerText = parseInt(scoreElement.innerText) + points;
-
-    
-    const pointElement = document.createElement('span');
-    pointElement.innerText = `+${points}`;
-    pointElement.className = 'point'; 
-
-   
-    scoreElement.appendChild(pointElement);
-
-   
-    setTimeout(() => {
-        pointElement.remove();
-    }, 500); 
-}
-
-
-
-
