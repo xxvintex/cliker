@@ -112,3 +112,26 @@ const game = new ClickerGame();
 document.getElementById("clickButton").addEventListener("click", () => game.click());
 document.getElementById("saveButton").addEventListener("click", () => game.saveGame());
 document.getElementById("loadButton").addEventListener("click", () => game.loadGame());
+
+let pointsDisplay = document.getElementById('points-display');
+let points = 100;
+
+
+function purchaseItem(cost) {
+    if (points >= cost) {
+        points -= cost; 
+        updatePointsDisplay(); 
+    } else {
+        alert("Не достатньо пойнтів!");
+    }
+}
+
+
+function updatePointsDisplay() {
+    pointsDisplay.innerText = `Кількість пойнтів: ${points}`;
+}
+
+
+document.getElementById('buy-button').addEventListener('click', function() {
+    purchaseItem(10); 
+});
