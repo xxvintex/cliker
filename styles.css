@@ -4,9 +4,9 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #282a36; 
-    color: #f8f8f2; 
     margin: 0;
+    background: linear-gradient(135deg, #282a36, #44475a); 
+    color: #f8f8f2; 
 }
 
 .game {
@@ -15,7 +15,6 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    color: #f8f8f2; 
     opacity: 0; 
     transform: translateY(20px); 
     transition: opacity 0.5s ease, transform 0.5s ease; 
@@ -24,15 +23,16 @@ body {
 .game.visible {
     opacity: 1; 
     transform: translateY(0); 
-    animation: bounce 0.5s; 
+    animation: bounce 0.8s; 
 }
 
 #score {
     font-size: 2rem;
     margin-bottom: 20px;
 }
+
 .score-bounce {
-    animation: bounce 0.5s; 
+    animation: bounce 0.8s; 
 }
 
 #clickButton, #saveButton, #loadButton {
@@ -50,6 +50,7 @@ body {
 #clickButton:hover, #saveButton:hover, #loadButton:hover {
     background-color: #50fa7b; 
     transform: scale(1.05); 
+    filter: brightness(1.1);
 }
 
 #upgrades button {
@@ -72,11 +73,34 @@ body {
 
 @keyframes bounce {
     0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    25% { transform: scale(1.1); } 
+    50% { transform: scale(0.95); }
+    75% { transform: scale(1.05); } 
     100% { transform: scale(1); }
 }
+
 .score-green {
     color: rgb(0, 248, 12);
     transition: color 0.5s ease; 
 }
 
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    #score {
+        font-size: 1.5rem;
+    }
+
+    #clickButton, #saveButton, #loadButton {
+        font-size: 1.2rem;
+        padding: 8px 16px;
+    }
+
+    #upgrades button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
