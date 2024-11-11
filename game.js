@@ -3,7 +3,7 @@ class ClickerGame {
         this.score = 0;
         this.clickValue = 1;
         this.autoClickValue = 0;
-        this.autoclickerSpeed = 1400; 
+        this.autoclickerSpeed = 1400;
         this.upgrades = [
             { name: "Подвійний клік", baseCost: 100, cost: 100, clickBonus: 1, autoClickBonus: 0, level: 0 },
             { name: "Автоматичний клікер", baseCost: 500, cost: 500, clickBonus: 0, autoClickBonus: 1, level: 0 },
@@ -17,69 +17,56 @@ class ClickerGame {
         document.querySelector('.game').classList.add('visible');
     }
 
-    
-    upgradeSpeed() {
-        const speedUpgrade = this.upgrades[2];
-        if (this.score >= speedUpgrade.cost) {
-            this.score -= speedUpgrade.cost;
-            speedUpgrade.level++;
-            this.autoclickerSpeed *= speedUpgrade.speedBonus; 
-            speedUpgrade.cost = Math.floor(speedUpgrade.baseCost * Math.pow(this.costMultiplier, speedUpgrade.level));
-            this.startAutoClick();
-            this.displayUpgrades();
-        } else {
-            alert("Не вистачає очок для прокачки швидкості!");
-        }
-    }
-
-    
     click() {
         this.updateScore(this.clickValue);
     }
 
-   
     buyUpgrade(upgrade) {
         if (this.score >= upgrade.cost) {
             this.score -= upgrade.cost;
             upgrade.level++;
-            this.clickValue += upgrade.clickBonus;
-            this.autoClickValue += upgrade.autoClickBonus;
-            upgrade.cost = Math.floor(upgrade.baseCost * Math.pow(this.costMultiplier, upgrade.level));
-
             
+            // Збільшуємо бонуси експоненційно на кожному рівні
+            this.clickValue += upgrade.clickBonus * Math.pow(1.1, upgrade.level);
+            this.autoClickValue += upgrade.autoClickBonus * Math.pow(1.1, upgrade.level);
+            
+            // Вартість наступного рівня може збільшуватись за експоненційною формулою
+            upgrade.cost = Math.floor(upgrade.baseCost * Math.pow(this.costMultiplier, upgrade.level));
+    
             if (upgrade.speedBonus) {
                 this.autoclickerSpeed *= upgrade.speedBonus;
                 this.startAutoClick();
             }
-
+    
             this.displayUpgrades();
         } else {
             alert("Не вистачає очок для покупки!");
         }
     }
 
-    
     startAutoClick() {
         if (this.autoClickValue > 0) {
-            clearInterval(this.interval); 
+            clearInterval(this.interval);
             this.interval = setInterval(() => {
                 this.updateScore(this.autoClickValue);
             }, this.autoclickerSpeed);
         }
     }
 
-    
     updateScore(points) {
         this.score += points;
         const scoreElement = document.getElementById('score');
         scoreElement.textContent = `Очки: ${this.score}`;
-        scoreElement.classList.add('score-bounce', 'score-green');
-        setTimeout(() => {
-            scoreElement.classList.remove('score-bounce', 'score-green');
-        }, 600);
+        
+        // Додаємо клас для обох анімацій: підсвічування та bounce
+        scoreElement.classList.add("highlight");
+    
+        // Видаляємо клас після завершення анімацій
+        scoreElement.addEventListener('animationend', () => {
+            scoreElement.classList.remove("highlight");
+        }, { once: true });
     }
 
-    
     saveGame() {
         const saveData = {
             score: this.score,
@@ -92,7 +79,6 @@ class ClickerGame {
         alert("Прогрес збережено!");
     }
 
-    
     loadGame() {
         const savedData = localStorage.getItem("clickerGameSave");
         if (savedData) {
@@ -100,7 +86,7 @@ class ClickerGame {
             this.score = score;
             this.clickValue = clickValue;
             this.autoClickValue = autoClickValue;
-            this.autoclickerSpeed = autoclickerSpeed; 
+            this.autoclickerSpeed = autoclickerSpeed;
             this.upgrades = upgrades.map((upg, index) => ({
                 ...upg,
                 baseCost: this.upgrades[index].baseCost,
@@ -110,7 +96,6 @@ class ClickerGame {
         }
     }
 
-    
     displayUpgrades() {
         const upgradeContainer = document.getElementById("upgrades");
         upgradeContainer.innerHTML = '';
@@ -120,13 +105,10 @@ class ClickerGame {
             upgradeButton.addEventListener("click", () => this.buyUpgrade(upgrade));
             upgradeContainer.appendChild(upgradeButton);
         });
-
     }
 }
 
-
 const game = new ClickerGame();
-
 
 document.getElementById("clickButton").addEventListener("click", () => game.click());
 document.getElementById("saveButton").addEventListener("click", () => game.saveGame());
