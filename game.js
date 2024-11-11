@@ -56,8 +56,8 @@ class ClickerGame {
     updateScore(points) {
         this.score += points;
         const scoreElement = document.getElementById('score');
-        scoreElement.textContent = `Очки: ${this.score}`;
-        
+        scoreElement.textContent = `Очки: ${Math.round(this.score)}`; // Додаємо округлення
+    
         // Додаємо клас для обох анімацій: підсвічування та bounce
         scoreElement.classList.add("highlight");
     
@@ -66,6 +66,7 @@ class ClickerGame {
             scoreElement.classList.remove("highlight");
         }, { once: true });
     }
+    
 
     saveGame() {
         const saveData = {
